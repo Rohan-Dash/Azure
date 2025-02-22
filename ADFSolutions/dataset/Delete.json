@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"FileName": {
+			"DelFile": {
 				"type": "string"
 			}
 		},
@@ -16,7 +16,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().FileName",
+					"value": "@dataset().DelFile",
 					"type": "Expression"
 				},
 				"folderPath": "csv",
