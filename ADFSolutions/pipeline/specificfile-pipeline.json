@@ -113,7 +113,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"FileName": {
-														"value": "item().name",
+														"value": "@activity('Get Metadata').output.itemName",
 														"type": "Expression"
 													}
 												}
@@ -125,7 +125,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"FileName": {
-														"value": "item().Name",
+														"value": "@activity('Get Metadata').output.itemName",
 														"type": "Expression"
 													}
 												}
