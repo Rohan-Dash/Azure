@@ -1,0 +1,9 @@
+{
+	"name": "adf-ssissolution",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "333077e8-f665-4ea4-ad9f-dfc64481a077",
+		"tenantId": "319f991d-f303-4d97-a026-85baae2d2ec3"
+	}
+}
