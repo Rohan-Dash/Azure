@@ -52,7 +52,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "If SpecificFile",
+							"name": "IfSpecificFile",
 							"type": "IfCondition",
 							"dependsOn": [],
 							"userProperties": [],
