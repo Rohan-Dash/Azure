@@ -67,7 +67,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"FileName": {
+					"DelFile": {
 						"type": "string"
 					}
 				},
@@ -77,7 +77,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@dataset().FileName",
+							"value": "@dataset().DelFile",
 							"type": "Expression"
 						},
 						"folderPath": "csv",
@@ -103,6 +103,100 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"folderPath": "csv",
+						"fileSystem": "destination"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "age",
+						"type": "String"
+					},
+					{
+						"name": "sex",
+						"type": "String"
+					},
+					{
+						"name": "cp",
+						"type": "String"
+					},
+					{
+						"name": "trestbps",
+						"type": "String"
+					},
+					{
+						"name": "chol",
+						"type": "String"
+					},
+					{
+						"name": "fbs",
+						"type": "String"
+					},
+					{
+						"name": "restecg",
+						"type": "String"
+					},
+					{
+						"name": "thalach",
+						"type": "String"
+					},
+					{
+						"name": "exang",
+						"type": "String"
+					},
+					{
+						"name": "oldpeak",
+						"type": "String"
+					},
+					{
+						"name": "slope",
+						"type": "String"
+					},
+					{
+						"name": "ca",
+						"type": "String"
+					},
+					{
+						"name": "thal",
+						"type": "String"
+					},
+					{
+						"name": "target",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/linkedserviceAzureDL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkedserviceAzureDL",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
 						"folderPath": "csv",
 						"fileSystem": "destination"
 					},
@@ -557,12 +651,19 @@
 								"value": "@activity('Get Metadata').output.childItems",
 								"type": "Expression"
 							},
-							"isSequential": true,
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "If Condition",
 									"type": "IfCondition",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Get Metadata1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
@@ -587,8 +688,8 @@
 														"referenceName": "Delete",
 														"type": "DatasetReference",
 														"parameters": {
-															"FileName": {
-																"value": "@activity('Get Metadata').output.itemName",
+															"DelFile": {
+																"value": "@activity('Get Metadata1').output.itemName",
 																"type": "Expression"
 															}
 														}
@@ -603,6 +704,43 @@
 											}
 										]
 									}
+								},
+								{
+									"name": "Get Metadata1",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "DelimitedText2",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"itemName",
+											"lastModified"
+										],
+										"storeSettings": {
+											"type": "AzureBlobFSReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										},
+										"formatSettings": {
+											"type": "DelimitedTextReadSettings"
+										}
+									}
 								}
 							]
 						}
@@ -615,6 +753,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]",
 				"[concat(variables('factoryId'), '/datasets/Delete')]"
 			]
 		},
@@ -891,7 +1030,7 @@
 														"type": "DatasetReference",
 														"parameters": {
 															"FileName": {
-																"value": "item().name",
+																"value": "@activity('Get Metadata').output.itemName",
 																"type": "Expression"
 															}
 														}
@@ -903,7 +1042,7 @@
 														"type": "DatasetReference",
 														"parameters": {
 															"FileName": {
-																"value": "item().Name",
+																"value": "@activity('Get Metadata').output.itemName",
 																"type": "Expression"
 															}
 														}
