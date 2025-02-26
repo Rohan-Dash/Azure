@@ -1,0 +1,28 @@
+{
+	"name": "Delete",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedserviceAzureDL",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"DelFile": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().DelFile",
+					"type": "Expression"
+				},
+				"folderPath": "csv",
+				"fileSystem": "destination"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

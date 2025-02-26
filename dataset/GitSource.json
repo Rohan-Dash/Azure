@@ -1,0 +1,23 @@
+{
+	"name": "GitSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "GitFilehttp",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "Rohan-Dash/Storage/refs/heads/main/heart.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
